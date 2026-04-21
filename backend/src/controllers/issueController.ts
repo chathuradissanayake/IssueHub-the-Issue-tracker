@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Issue from "../models/Issue";
 import { AuthRequest } from "../middleware/authMiddleware";
+import mongoose from "mongoose";
+
 
 // CREATE ISSUE
 export const createIssue = async (req: AuthRequest, res: Response) => {
@@ -51,7 +53,6 @@ export const getIssues = async (req: AuthRequest, res: Response) => {
 };
 
 
-
 // GET SINGLE
 export const getIssueById = async (req: Request, res: Response) => {
   try {
@@ -100,7 +101,11 @@ export const deleteIssue = async (req: Request, res: Response) => {
 export const getIssueStats = async (req: AuthRequest, res: Response) => {
   try {
     const stats = await Issue.aggregate([
-      { $match: { user: req.user?.userId } },
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(req.user?.userId),
+        },
+      },
       {
         $group: {
           _id: "$status",
