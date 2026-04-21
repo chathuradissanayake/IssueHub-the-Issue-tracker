@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { getIssues } from "../services/issueService";
 import type { Issue } from "../types/issue";
 import IssuesList from "../components/IssuesList";
+import IssueCounter from "../components/IssueCounter";
 
 interface JwtPayload {
   userId: string;
@@ -12,7 +13,7 @@ interface JwtPayload {
   iat?: number;
 }
 
-const Issues = () => {
+const IssueBoard = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -38,31 +39,30 @@ const Issues = () => {
     }
   }, []);
 
-  // 📦 Fetch issues from backend
+  // 📦 Fetch issues and stats from backend
   useEffect(() => {
-    const fetchIssues = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
 
-        const res = await getIssues({
-          page: 1,
-          limit: 10,
-        });
+        const issuesRes = await getIssues({ page: 1, limit: 10 });
 
-        setIssues(res.data.issues);
+        setIssues(issuesRes.data.issues);
       } catch (error) {
-        console.error("Error fetching issues:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchIssues();
+    fetchData();
   }, []);
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Issue Board 🚀</h1>
+
+      {loading ? <p>Loading stats...</p> : <IssueCounter />}
 
       {/* Loading state */}
       {loading && <p>Loading issues...</p>}
@@ -73,11 +73,11 @@ const Issues = () => {
       )}
 
       {/* Issue List */}
-      <div className="grid gap-3">
+      <div className="grid gap-3 mt-6">
         <IssuesList issues={issues} />
       </div>
     </div>
   );
 };
 
-export default Issues;
+export default IssueBoard;
