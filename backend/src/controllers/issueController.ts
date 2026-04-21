@@ -28,16 +28,22 @@ export const createIssue = async (req: AuthRequest, res: Response) => {
 // GET ALL (with search, filter, pagination)
 export const getIssues = async (req: AuthRequest, res: Response) => {
   try {
-    const { search, status, priority, page = 1, limit = 10 } = req.query;
+    const { search, status, priority, severity, page = 1, limit = 10 } = req.query;
 
     const filter: any = { user: req.user?.userId };
 
+    // Search in both title and description
     if (search) {
-      filter.title = { $regex: search, $options: "i" };
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
     }
 
+    // Add status, priority, and severity filters
     if (status) filter.status = status;
     if (priority) filter.priority = priority;
+    if (severity) filter.severity = severity;
 
     const issues = await Issue.find(filter)
       .skip((+page - 1) * +limit)

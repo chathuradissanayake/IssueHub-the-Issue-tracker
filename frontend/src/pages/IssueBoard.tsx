@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { getIssues } from "../services/issueService";
-import type { Issue } from "../types/issue";
+import type { Issue, IssueQueryParams } from "../types/issue";
 import IssuesList from "../components/IssuesList";
 import IssueCounter from "../components/IssueCounter";
+import IssueFilters from "../components/IssueFilters";
 
 interface JwtPayload {
   userId: string;
@@ -15,9 +16,14 @@ interface JwtPayload {
 
 const IssueBoard = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
-  // 🔐 Decode token (optional UI/debug use)
+  const [filters, setFilters] = useState<IssueQueryParams>({
+    page: 1,
+    limit: 10,
+  });
+
+  // 🔐 Token debug (unchanged)
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -25,57 +31,64 @@ const IssueBoard = () => {
       try {
         const decoded = jwtDecode<JwtPayload>(token);
 
-        const expiryDate = new Date(decoded.exp * 1000);
-        const remainingTime = decoded.exp * 1000 - Date.now();
-
-        console.log("JWT Token:", token);
         console.log("Logged User:", decoded.email);
         console.log("Role:", decoded.role);
-        console.log("Token Expiry:", expiryDate.toLocaleString());
-        console.log("Time Remaining (ms):", remainingTime);
       } catch (error) {
         console.error("Invalid token:", error);
       }
     }
   }, []);
 
-  // 📦 Fetch issues and stats from backend
+  // 📦 Fetch issues whenever filters change
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        const issuesRes = await getIssues({ page: 1, limit: 10 });
+        const res = await getIssues(filters);
 
-        setIssues(issuesRes.data.issues);
+        setIssues(res.data.issues);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching issues:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [filters]);
+
+  // 🎯 Single source of truth for filters
+  const handleFilterChange = (newFilters: IssueQueryParams) => {
+    setFilters({
+      page: 1,
+      limit: 10,
+      ...newFilters,
+    });
+  };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Issue Board 🚀</h1>
 
-      {loading ? <p>Loading stats...</p> : <IssueCounter />}
+      <IssueCounter />
 
-      {/* Loading state */}
+      <IssueFilters
+        filters={filters}
+        onFilterChange={handleFilterChange}
+      />
+
       {loading && <p>Loading issues...</p>}
 
-      {/* Empty state */}
       {!loading && issues.length === 0 && (
-        <p className="text-gray-500">No issues found</p>
+        <p className="text-gray-500">No issues found for the selected filters.</p>
       )}
 
-      {/* Issue List */}
-      <div className="grid gap-3 mt-6">
-        <IssuesList issues={issues} />
-      </div>
+      {!loading && issues.length > 0 && (
+        <div className="grid gap-3 mt-6">
+          <IssuesList issues={issues} />
+        </div>
+      )}
     </div>
   );
 };

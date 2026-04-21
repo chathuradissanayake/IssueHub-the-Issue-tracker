@@ -31,7 +31,7 @@ const userSchema = new Schema<IUser>(
       default: "",
     },
   },
-  { timestamps: true } // gives createdAt automatically
+  { timestamps: true }
 );
 
 export default mongoose.model<IUser>("User", userSchema);

@@ -1,13 +1,5 @@
-// src/routes/issueRoutes.ts
 import express from "express";
-import {
-  createIssue,
-  getIssues,
-  getIssueById,
-  updateIssue,
-  deleteIssue,
-  getIssueStats,
-} from "../controllers/issueController";
+import {createIssue, getIssues, getIssueById, updateIssue, deleteIssue, getIssueStats} from "../controllers/issueController";
 import { protect } from "../middleware/authMiddleware";
 
 const router = express.Router();
