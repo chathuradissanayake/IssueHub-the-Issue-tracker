@@ -1,20 +1,66 @@
-// src/components/modals/IssueModal.tsx
+// src/components/IssueModal.tsx
 import React, { forwardRef, useImperativeHandle, useState, useCallback } from "react";
-import type { Issue } from "../types/issue";
+import type { Issue, Status, Priority, Severity } from "../types/issue";
 
 export interface IssueModalRef {
-  open: (issue: Issue) => void;
+  open: (issue?: Issue) => void;
   close: () => void;
 }
 
-const IssueModal = forwardRef<IssueModalRef, { width?: string }>((props, ref) => {
+interface IssueModalProps {
+  width?: string;
+  onSubmit?: (data: {
+    title: string;
+    description: string;
+    status: Status;
+    priority: Priority;
+    severity: Severity | "";
+  }) => Promise<void>;
+  onUpdate?: (id: string, data: {
+    title: string;
+    description: string;
+    status: Status;
+    priority: Priority;
+    severity: Severity | "";
+  }) => Promise<void>;
+}
+
+const statusOptions: Status[] = ["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"];
+const priorityOptions: Priority[] = ["LOW", "MEDIUM", "HIGH"];
+const severityOptions: (Severity | "")[] = ["", "MINOR", "MAJOR", "CRITICAL"];
+
+const IssueModal = forwardRef<IssueModalRef, IssueModalProps>(({ width, onSubmit, onUpdate }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
   const [issue, setIssue] = useState<Issue | null>(null);
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    status: "OPEN" as Status,
+    priority: "MEDIUM" as Priority,
+    severity: "" as Severity | "",
+  });
 
   useImperativeHandle(ref, () => ({
-    open: (issue: Issue) => {
-      setIssue(issue);
+    open: (issue?: Issue) => {
+      setIssue(issue || null);
       setIsVisible(true);
+      setForm(
+        issue
+          ? {
+              title: issue.title,
+              description: issue.description,
+              status: issue.status,
+              priority: issue.priority,
+              severity: issue.severity || "",
+            }
+          : {
+              title: "",
+              description: "",
+              status: "OPEN",
+              priority: "MEDIUM",
+              severity: "",
+            }
+      );
     },
     close: () => setIsVisible(false),
   }));
@@ -33,12 +79,25 @@ const IssueModal = forwardRef<IssueModalRef, { width?: string }>((props, ref) =>
     [handleClose]
   );
 
-  // Derived timestamp info for display
-  const created = issue?.createdAt ? new Date(issue.createdAt) : null;
-  const updated = issue?.updatedAt ? new Date(issue.updatedAt) : null;
-  const isUpdated = updated && created && updated.getTime() > created.getTime();
-  const tsLabel = isUpdated ? "Updated" : "Created";
-  const tsTime = (isUpdated ? updated : created)?.toLocaleString();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.title.trim() || !form.description.trim()) {
+      alert("Fill all fields");
+      return;
+    }
+    if (!issue) {
+      await onSubmit?.(form);
+    } else {
+      await onUpdate?.(issue._id, form);
+    }
+    setIsVisible(false);
+    setIssue(null);
+  };
 
   if (!isVisible) return null;
 
@@ -47,18 +106,13 @@ const IssueModal = forwardRef<IssueModalRef, { width?: string }>((props, ref) =>
       className="fixed inset-0 backdrop-blur-sm bg-opacity-50 flex justify-center items-center z-50"
       onClick={handleBackdropClick}
     >
-      <div className={`relative bg-white p-0 rounded-lg shadow-lg ${props.width || "w-full xl:w-2/3"}`}>
+      <div className={`relative bg-white p-0 rounded-lg shadow-lg ${width || "w-full xl:w-2/3"}`}>
         <div className="bg-gradient-to-br from-cyan-50 to-teal-50 rounded-lg overflow-hidden flex flex-col">
           {/* Header */}
           <div className="bg-gradient-to-r from-cyan-400 to-sky-400 px-6 py-4 flex items-center justify-between border-b-4 border-sky-500">
-            <div>
-              <h2 className="text-xl font-semibold text-white">{issue?.title}</h2>
-              {tsTime && (
-                <p className="text-xs text-cyan-100 mt-1">
-                  {tsLabel}: {tsTime}
-                </p>
-              )}
-            </div>
+            <h2 className="text-xl font-semibold text-white">
+              {!issue ? "Create New Issue" : "Edit Issue"}
+            </h2>
             <button
               onClick={handleClose}
               className="text-white hover:text-cyan-200 transition-colors"
@@ -72,20 +126,76 @@ const IssueModal = forwardRef<IssueModalRef, { width?: string }>((props, ref) =>
 
           {/* Body */}
           <div className="p-6 flex-1 flex flex-col">
-            <p className="mb-4 text-gray-800">{issue?.description}</p>
-            <div className="flex gap-2 mt-2">
-              <span className="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded">
-                {issue?.status}
-              </span>
-              <span className="text-xs px-2 py-1 bg-green-100 text-green-600 rounded">
-                {issue?.priority}
-              </span>
-              {issue?.severity && (
-                <span className="text-xs px-2 py-1 bg-red-100 text-red-600 rounded">
-                  {issue.severity}
-                </span>
-              )}
-            </div>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <input
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+                placeholder="Title"
+                className="border-b p-2 text-lg font-semibold"
+              />
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Description"
+                className="border p-2"
+                rows={4}
+              />
+              <div className="flex gap-4">
+                <div>
+                  <label className="block text-xs font-semibold mb-1">Status</label>
+                  <select
+                    name="status"
+                    value={form.status}
+                    onChange={handleChange}
+                    className="border p-2 rounded"
+                  >
+                    {statusOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1">Priority</label>
+                  <select
+                    name="priority"
+                    value={form.priority}
+                    onChange={handleChange}
+                    className="border p-2 rounded"
+                  >
+                    {priorityOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1">Severity</label>
+                  <select
+                    name="severity"
+                    value={form.severity}
+                    onChange={handleChange}
+                    className="border p-2 rounded"
+                  >
+                    {severityOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt || "None"}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                {!issue ? "Create Issue" : "Update Issue"}
+              </button>
+            </form>
           </div>
         </div>
       </div>
