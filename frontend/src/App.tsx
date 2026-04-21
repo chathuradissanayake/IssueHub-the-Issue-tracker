@@ -1,7 +1,7 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import Issues from "./pages/Issues";
+import IssueBoard from "./pages/IssueBoard";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 
@@ -11,7 +11,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/issues" element={<ProtectedRoute><Issues /></ProtectedRoute>} />
+        <Route path="/issueboard" element={<ProtectedRoute><IssueBoard /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
