@@ -3,7 +3,7 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: "http://localhost:5000/api",
-  withCredentials: true, // optional (useful if cookies later)
+  withCredentials: true, 
 });
 
 // attach token
@@ -23,7 +23,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/"; // or "/login" if that's your login route
+      window.location.href = "/"; 
     }
     return Promise.reject(error);
   }
