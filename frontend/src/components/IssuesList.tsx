@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import type { Issue } from "../types/issue";
 import IssueTile from "./IssueTile";
-import IssueModal, { type IssueModalRef } from "./modals/IssueModal";
+import IssueModal, { type IssueModalRef } from "./IssueModal";
 
 interface IssuesListProps {
   issues: Issue[];
