@@ -43,7 +43,7 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
       <button
         onClick={handleSubmit}
         disabled={loading}
-        className="w-full bg-blue-500 text-white p-3 rounded-xl hover:bg-blue-600 transition shadow-md disabled:opacity-50"
+        className="w-full bg-cyan-600 text-white p-3 rounded-xl hover:bg-cyan-700 transition shadow-md disabled:opacity-50"
       >
         {loading ? "Logging in..." : "Login"}
       </button>

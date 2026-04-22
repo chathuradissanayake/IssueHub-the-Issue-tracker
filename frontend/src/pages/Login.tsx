@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="flex h-screen bg-gradient-to-br ">
       {/* Left Image */}
       <div className="hidden md:block w-1/2 relative">
         <img
@@ -57,23 +57,23 @@ const Login = () => {
       <div className="w-full md:w-1/2 flex  justify-center p-6">
         <div>
         {/* Logo */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center my-6">
             <img src={issuehub} alt="login" className="h-32" />
           </div>
           <div>
 
-            <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center">
-              Welcome to IssueHub
+            <h2 className="text-4xl font-sans text-cyan-800 mb-6 text-center">
+              IssueHub
             </h2>
             
           </div>
 
           {/* Toggle */}
-          <div className="flex mb-6 bg-gray-100 rounded-xl p-1">
+          <div className="flex mb-6 bg-gray-100 rounded-xl ">
             <button
               onClick={() => setIsLogin(true)}
               className={`w-1/2 py-2 rounded-lg text-sm font-medium transition ${
-                isLogin ? "bg-blue-500 text-white shadow" : "text-gray-600"
+                isLogin ? "bg-cyan-600 text-white shadow" : "text-gray-600"
               }`}
             >
               Login
@@ -81,7 +81,7 @@ const Login = () => {
             <button
               onClick={() => setIsLogin(false)}
               className={`w-1/2 py-2 rounded-lg text-sm font-medium transition ${
-                !isLogin ? "bg-blue-500 text-white shadow" : "text-gray-600"
+                !isLogin ? "bg-cyan-600 text-white shadow" : "text-gray-600"
               }`}
             >
               Register
