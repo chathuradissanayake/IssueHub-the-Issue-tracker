@@ -33,6 +33,7 @@ export interface IssueQueryParams {
   search?: string;
   status?: Status;
   priority?: Priority;
+  severity?: Severity;
   page?: number;
   limit?: number;
 }
