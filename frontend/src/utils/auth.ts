@@ -1,4 +1,3 @@
-// src/utils/auth.ts
 import { jwtDecode } from "jwt-decode";
 import type { JwtPayload } from "../types/jwt";
 

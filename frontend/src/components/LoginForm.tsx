@@ -1,4 +1,3 @@
-// src/components/LoginForm.tsx
 import { useState } from "react";
 
 interface LoginFormProps {

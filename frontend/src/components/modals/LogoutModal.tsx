@@ -1,4 +1,3 @@
-// src/components/modals/LogoutModal.tsx
 import Modal from "../common/Modal";
 
 interface LogoutModalProps {

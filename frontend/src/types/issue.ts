@@ -1,4 +1,3 @@
-// src/types/issue.ts
 export type Status = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
 export type Priority = "LOW" | "MEDIUM" | "HIGH";
 export type Severity = "MINOR" | "MAJOR" | "CRITICAL";

@@ -1,4 +1,3 @@
-// src/components/RegisterForm.tsx
 import { useState } from "react";
 
 interface RegisterFormProps {

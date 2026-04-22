@@ -1,4 +1,3 @@
-// src/models/Issue.ts
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IIssue extends Document {

@@ -1,4 +1,3 @@
-// src/components/IssueModal.tsx
 import React, { forwardRef, useImperativeHandle, useState, useCallback } from "react";
 import type { Issue, Status, Priority, Severity } from "../types/issue";
 import StatusUpdateConfirmationModal from "./modals/StatusUpdateConfirmationModal";
