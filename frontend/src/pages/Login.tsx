@@ -50,8 +50,7 @@ const Login = () => {
           alt="IssueHub visual"
           className="object-cover w-full h-full select-none"
         />
-        {/* Soft overlay with branding */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-violet-900/40 via-indigo-900/20 to-transparent" />
+    
         <div className="absolute bottom-10 left-10 right-10">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
             <p className="text-white font-semibold text-lg mb-1">Track every issue.</p>
