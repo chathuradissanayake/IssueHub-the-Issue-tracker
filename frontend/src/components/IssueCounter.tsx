@@ -1,4 +1,3 @@
-// src/components/IssueCounter.tsx
 import { useEffect, useState } from "react";
 import { getStats } from "../services/issueService";
 import type { Status } from "../types/issue";
@@ -20,18 +19,13 @@ const IssueCounter = () => {
     const fetchStats = async () => {
       try {
         const res = await getStats();
-
-        // API returns: [{ _id: "OPEN", count: 3 }, ...]
         const data = res.data;
-
         const mapped: StatsMap = { ...defaultStats };
-
         data.forEach((item) => {
           if (item._id in mapped) {
             mapped[item._id as Status] = item.count;
           }
         });
-
         setStats(mapped);
       } catch (err) {
         console.error("Failed to fetch stats", err);
@@ -39,38 +33,99 @@ const IssueCounter = () => {
         setLoading(false);
       }
     };
-
     fetchStats();
   }, []);
 
-  const getColor = (status: Status) => {
-    switch (status) {
-      case "OPEN":
-        return "bg-red-100 text-red-600";
-      case "IN_PROGRESS":
-        return "bg-yellow-100 text-yellow-600";
-      case "RESOLVED":
-        return "bg-green-100 text-green-600";
-      case "CLOSED":
-        return "bg-gray-200 text-gray-700";
-      default:
-        return "";
-    }
-  };
+  const cards: {
+    key: Status;
+    label: string;
+    icon: string;
+    iconBg: string;
+    numColor: string;
+    badge: string;
+    bar: string;
+  }[] = [
+    {
+      key: "OPEN",
+      label: "Open",
+      icon: "🔥",
+      iconBg: "bg-blue-50",
+      numColor: "text-blue-600",
+      badge: "bg-blue-50 text-blue-500",
+      bar: "bg-blue-400",
+    },
+    {
+      key: "IN_PROGRESS",
+      label: "In Progress",
+      icon: "⚡",
+      iconBg: "bg-amber-50",
+      numColor: "text-amber-500",
+      badge: "bg-amber-50 text-amber-500",
+      bar: "bg-amber-400",
+    },
+    {
+      key: "RESOLVED",
+      label: "Resolved",
+      icon: "✅",
+      iconBg: "bg-emerald-50",
+      numColor: "text-emerald-600",
+      badge: "bg-emerald-50 text-emerald-500",
+      bar: "bg-emerald-400",
+    },
+    {
+      key: "CLOSED",
+      label: "Closed",
+      icon: "📦",
+      iconBg: "bg-slate-100",
+      numColor: "text-slate-500",
+      badge: "bg-slate-100 text-slate-500",
+      bar: "bg-slate-300",
+    },
+  ];
 
-  if (loading) return <p>Loading stats...</p>;
+  const total = Object.values(stats).reduce((a, b) => a + b, 0);
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="bg-white rounded-2xl border border-slate-100 p-5 animate-pulse h-28" />
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-      {Object.entries(stats).map(([status, count]) => (
-        <div
-          key={status}
-          className={`p-4 rounded-lg shadow-sm ${getColor(status as Status)}`}
-        >
-          <p className="text-sm font-medium">{status.replace("_", " ")}</p>
-          <p className="text-2xl font-bold">{count}</p>
-        </div>
-      ))}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {cards.map(({ key, label, icon, iconBg, numColor, badge, bar }) => {
+        const count = stats[key];
+        const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+
+        return (
+          <div
+            key={key}
+            className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className={`text-xs font-semibold tracking-wide uppercase ${badge} px-2 py-0.5 rounded-full`}>
+                {label}
+              </span>
+              <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-base ${iconBg}`}>
+                {icon}
+              </span>
+            </div>
+            <p className={`text-3xl font-bold tracking-tight ${numColor} mb-3`}>{count}</p>
+            {/* Progress bar */}
+            <div className="w-full bg-slate-100 rounded-full h-1.5">
+              <div
+                className={`${bar} h-1.5 rounded-full transition-all duration-700`}
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+            <p className="text-slate-400 text-xs mt-1">{pct}% of total</p>
+          </div>
+        );
+      })}
     </div>
   );
 };
