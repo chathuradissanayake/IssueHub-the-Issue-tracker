@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { Issue, Status, Priority, Severity } from "../types/issue";
 import IssueTile from "./IssueTile";
 import IssueModal, { type IssueModalRef } from "./IssueModal";
+import Pagination from "./common/Pagination"; // Import the Pagination component
 import { createIssue, updateIssue } from "../services/issueService";
 
 interface IssuesListProps {
@@ -29,6 +30,15 @@ const NewIssueTile = ({ empty, onClick }: NewIssueTileProps) => (
 
 const IssuesList = ({ issues }: IssuesListProps) => {
   const modalRef = useRef<IssueModalRef>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const issuesPerPage = 19;
+
+  // Calculate the current issues to display
+  const indexOfLastIssue = currentPage * issuesPerPage;
+  const indexOfFirstIssue = indexOfLastIssue - issuesPerPage;
+  const currentIssues = issues.slice(indexOfFirstIssue, indexOfLastIssue);
 
   const handleTileClick = (issue: Issue) => {
     modalRef.current?.open(issue);
@@ -91,7 +101,7 @@ const IssuesList = ({ issues }: IssuesListProps) => {
     <>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         <NewIssueTile onClick={handleNewIssue} />
-        {issues.map((issue) => (
+        {currentIssues.map((issue) => (
           <div
             key={issue._id}
             onClick={() => handleTileClick(issue)}
@@ -101,6 +111,14 @@ const IssuesList = ({ issues }: IssuesListProps) => {
           </div>
         ))}
       </div>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(issues.length / issuesPerPage)}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
+
       <IssueModal ref={modalRef} onSubmit={handleCreateIssue} onUpdate={handleUpdateIssue} />
     </>
   );
