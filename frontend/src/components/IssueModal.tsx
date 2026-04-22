@@ -199,7 +199,7 @@ const saveIssue = async () => {
                 value={form.title}
                 onChange={handleChange}
                 placeholder="Short, descriptive issue title..."
-                className="w-full h-10 px-3 text-sm rounded-xl border border-slate-200 bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition font-medium"
+                className="w-full h-10 px-3 text-sm rounded-xl border border-slate-200 bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition font-medium"
               />
             </div>
 
@@ -213,7 +213,7 @@ const saveIssue = async () => {
                 value={form.description}
                 onChange={handleChange}
                 placeholder="Describe the issue in detail..."
-                className="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition resize-none leading-relaxed"
+                className="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition resize-none leading-relaxed"
                 rows={4}
               />
             </div>
