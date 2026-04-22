@@ -18,7 +18,7 @@ const IssueFilters = ({ filters, onFilterChange }: Props) => {
   const hasActiveFilters = filters.search || filters.status || filters.priority || filters.severity;
 
   const selectClass =
-    "h-9 px-3 pr-8 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition appearance-none cursor-pointer hover:border-slate-300";
+    "h-9 px-3 pr-8 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition appearance-none cursor-pointer hover:border-slate-300";
 
   return (
     <div className="bg-white rounded-2xl border border-slate-100 p-4">
@@ -32,7 +32,7 @@ const IssueFilters = ({ filters, onFilterChange }: Props) => {
           <input
             type="text"
             placeholder="Search title or description..."
-            className="w-full h-9 pl-9 pr-3 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition"
+            className="w-full h-9 pl-9 pr-3 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition"
             value={filters.search || ""}
             onChange={(e) => handleChange("search", e.target.value)}
           />
