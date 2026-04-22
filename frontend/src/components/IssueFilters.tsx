@@ -7,7 +7,7 @@ interface Props {
 
 const IssueFilters = ({ filters, onFilterChange }: Props) => {
 
-  const handleChange = (key: keyof IssueQueryParams, value: any) => {
+  const handleChange = (key: keyof IssueQueryParams, value: unknown) => {
     onFilterChange({
       ...filters,
       [key]: value,
