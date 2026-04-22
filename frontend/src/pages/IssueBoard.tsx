@@ -6,6 +6,7 @@ import IssuesList from "../components/IssuesList";
 import IssueCounter from "../components/IssueCounter";
 import IssueFilters from "../components/IssueFilters";
 import LogoutModal from "../components/modals/LogoutModal";
+import issuehub from "../assets/issuehub_logo.png";
 
 const IssueBoard = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
@@ -75,10 +76,8 @@ const IssueBoard = () => {
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-sm">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
+            <div className="">
+              <img src={issuehub} alt="IssueHub logo" className="h-8 object-contain" />
             </div>
             <span className="font-bold text-slate-800 text-lg tracking-tight">
               IssueHub
@@ -94,7 +93,7 @@ const IssueBoard = () => {
                 className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 transition rounded-full px-3 py-1.5"
               >
                 {/* Avatar */}
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-400 to-indigo-400 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-sky-500 to-sky-600 flex items-center justify-center">
                   <span className="text-white text-[11px] font-bold">
                     {userEmail[0].toUpperCase()}
                   </span>
