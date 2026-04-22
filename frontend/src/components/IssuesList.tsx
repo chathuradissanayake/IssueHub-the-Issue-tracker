@@ -16,14 +16,14 @@ interface NewIssueTileProps {
 const NewIssueTile = ({ empty, onClick }: NewIssueTileProps) => (
   <div
     onClick={onClick}
-    className={`group cursor-pointer rounded-2xl border-2 border-dashed border-violet-200 bg-violet-50/50 hover:bg-violet-50 hover:border-violet-300 transition-all duration-200 flex flex-col items-center justify-center gap-2 ${empty ? "min-h-[220px]" : "h-[168px]"}`}
+    className={`group cursor-pointer rounded-2xl border-2 border-dashed border-sky-200 bg-sky-50/50 hover:bg-sky-50 hover:border-sky-300 transition-all duration-200 flex flex-col items-center justify-center gap-2 ${empty ? "min-h-[220px]" : "h-[168px]"}`}
   >
-    <div className="w-10 h-10 rounded-xl bg-white border border-violet-200 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
-      <svg className="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className="w-10 h-10 rounded-xl bg-white border border-sky-200 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
+      <svg className="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
       </svg>
     </div>
-    <p className="text-violet-500 font-semibold text-sm">New Issue</p>
+    <p className="text-sky-500 font-semibold text-sm">New Issue</p>
   </div>
 );
 
