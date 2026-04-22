@@ -7,8 +7,8 @@ interface LoginFormProps {
 }
 
 const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = () => {
     if (!email || !password) {
@@ -19,11 +19,14 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow w-80">
-      <h2 className="text-xl font-bold mb-4 text-center">Login</h2>
+    <div>
+      <h2 className="text-2xl font-bold text-gray-800 mb-1">Welcome back</h2>
+      <p className="text-sm text-gray-500 mb-6">
+        Login to continue to IssueHub
+      </p>
 
       <input
-        className="w-full mb-3 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-full mb-3 p-3 border rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -31,7 +34,7 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
 
       <input
         type="password"
-        className="w-full mb-4 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="w-full mb-5 p-3 border rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -40,7 +43,7 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
       <button
         onClick={handleSubmit}
         disabled={loading}
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition disabled:opacity-50"
+        className="w-full bg-blue-500 text-white p-3 rounded-xl hover:bg-blue-600 transition shadow-md disabled:opacity-50"
       >
         {loading ? "Logging in..." : "Login"}
       </button>
