@@ -45,7 +45,7 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
   };
 
   const inputClass =
-    "w-full h-10 px-3 text-sm rounded-xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 focus:bg-white transition";
+    "w-full h-10 px-3 text-sm rounded-xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:bg-white transition";
 
   return (
     <div>
