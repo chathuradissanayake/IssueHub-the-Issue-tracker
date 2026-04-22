@@ -146,7 +146,7 @@ const RegisterForm = ({ onRegister, loading }: RegisterFormProps) => {
       <button
         onClick={handleSubmit}
         disabled={loading}
-        className="w-full h-10 bg-violet-500 hover:bg-violet-600 text-white text-sm font-semibold rounded-xl transition shadow-sm shadow-violet-200 disabled:opacity-60 flex items-center justify-center gap-2"
+        className="w-full h-10 bg-sky-500 hover:bg-sky-600 text-white text-sm font-semibold rounded-xl transition shadow-sm shadow-sky-200 disabled:opacity-60 flex items-center justify-center gap-2"
       >
         {loading ? (
           <>
