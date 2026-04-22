@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Circle, Loader2, CheckCircle2, Lock } from "lucide-react"; // Import lucide-react icons
 import { getStats } from "../services/issueService";
 import type { Status } from "../types/issue";
 
@@ -9,6 +10,13 @@ const defaultStats: StatsMap = {
   IN_PROGRESS: 0,
   RESOLVED: 0,
   CLOSED: 0,
+};
+
+const statusIcon = {
+  OPEN: Circle,
+  IN_PROGRESS: Loader2,
+  RESOLVED: CheckCircle2,
+  CLOSED: Lock,
 };
 
 const IssueCounter = () => {
@@ -39,8 +47,8 @@ const IssueCounter = () => {
   const cards: {
     key: Status;
     label: string;
-    icon: string;
-    iconBg: string;
+    icon: keyof typeof statusIcon;
+    iconColor: string; // Add icon color
     numColor: string;
     badge: string;
     bar: string;
@@ -48,8 +56,8 @@ const IssueCounter = () => {
     {
       key: "OPEN",
       label: "Open",
-      icon: "🔥",
-      iconBg: "bg-blue-50",
+      icon: "OPEN",
+      iconColor: "text-blue-500", // Icon color for OPEN
       numColor: "text-blue-600",
       badge: "bg-blue-50 text-blue-500",
       bar: "bg-blue-400",
@@ -57,8 +65,8 @@ const IssueCounter = () => {
     {
       key: "IN_PROGRESS",
       label: "In Progress",
-      icon: "⚡",
-      iconBg: "bg-amber-50",
+      icon: "IN_PROGRESS",
+      iconColor: "text-amber-500", // Icon color for IN_PROGRESS
       numColor: "text-amber-500",
       badge: "bg-amber-50 text-amber-500",
       bar: "bg-amber-400",
@@ -66,8 +74,8 @@ const IssueCounter = () => {
     {
       key: "RESOLVED",
       label: "Resolved",
-      icon: "✅",
-      iconBg: "bg-emerald-50",
+      icon: "RESOLVED",
+      iconColor: "text-emerald-500", // Icon color for RESOLVED
       numColor: "text-emerald-600",
       badge: "bg-emerald-50 text-emerald-500",
       bar: "bg-emerald-400",
@@ -75,8 +83,8 @@ const IssueCounter = () => {
     {
       key: "CLOSED",
       label: "Closed",
-      icon: "📦",
-      iconBg: "bg-slate-100",
+      icon: "CLOSED",
+      iconColor: "text-slate-500", // Icon color for CLOSED
       numColor: "text-slate-500",
       badge: "bg-slate-100 text-slate-500",
       bar: "bg-slate-300",
@@ -97,9 +105,10 @@ const IssueCounter = () => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {cards.map(({ key, label, icon, iconBg, numColor, badge, bar }) => {
+      {cards.map(({ key, label, icon, iconColor, numColor, badge, bar }) => {
         const count = stats[key];
         const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+        const IconComponent = statusIcon[icon]; // Dynamically get the icon component
 
         return (
           <div
@@ -110,8 +119,8 @@ const IssueCounter = () => {
               <span className={`text-xs font-semibold tracking-wide uppercase ${badge} px-2 py-0.5 rounded-full`}>
                 {label}
               </span>
-              <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-base ${iconBg}`}>
-                {icon}
+              <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-base`}>
+                <IconComponent className={`w-5 h-5 ${iconColor}`} /> {/* Apply icon color */}
               </span>
             </div>
             <p className={`text-3xl font-bold tracking-tight ${numColor} mb-3`}>{count}</p>
