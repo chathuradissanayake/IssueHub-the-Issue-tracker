@@ -1,20 +1,16 @@
 // src/pages/Login.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../services/authService";
+import { loginUser, registerUser } from "../services/authService";
+import LoginForm from "../components/LoginForm";
+import RegisterForm from "../components/RegisterForm";
 
 const Login = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true); // Toggle state for forms
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      alert("Please enter email and password");
-      return;
-    }
-
+  const handleLogin = async (email: string, password: string) => {
     try {
       setLoading(true);
 
@@ -31,33 +27,49 @@ const Login = () => {
     }
   };
 
+  const handleRegister = async (email: string, password: string) => {
+    try {
+      setLoading(true);
+
+      await registerUser({ email, password });
+
+      alert("Registration successful! Please log in.");
+      setIsLogin(true); // Switch to login form after successful registration
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Registration failed";
+      alert(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-xl shadow w-80">
-        <h2 className="text-xl font-bold mb-4 text-center">Login</h2>
+      <div >
+        <div className="flex justify-between mb-4">
+          <button
+            onClick={() => setIsLogin(true)}
+            className={`w-1/2 p-2 rounded-tl-xl ${
+              isLogin ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            Login
+          </button>
+          <button
+            onClick={() => setIsLogin(false)}
+            className={`w-1/2 p-2 rounded-tr-xl ${
+              !isLogin ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+          >
+            Register
+          </button>
+        </div>
 
-        <input
-          className="w-full mb-3 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          type="password"
-          className="w-full mb-4 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button
-          onClick={handleLogin}
-          disabled={loading}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition disabled:opacity-50"
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
+        {isLogin ? (
+          <LoginForm onLogin={handleLogin} loading={loading} />
+        ) : (
+          <RegisterForm onRegister={handleRegister} loading={loading} />
+        )}
       </div>
     </div>
   );
