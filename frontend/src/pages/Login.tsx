@@ -74,22 +74,15 @@ const Login = () => {
       </div>
 
       {/* Right — auth panel */}
-      <div className="w-full md:w-1/2 flex flex-col items-center justify-center px-6 py-10">
+      <div className="w-full md:w-1/2 flex flex-col items-center  px-6 py-10">
         <div className="w-full max-w-sm">
 
           {/* Logo + wordmark */}
-          <div className="flex flex-col items-center mb-8">
-            <div className="mb-3">
-              <img src={issuehub} alt="IssueHub logo" className="h-16 object-contain" />
+          <div className="flex flex-col items-center my-4">
+            <div className="">
+              <img src={issuehub} alt="IssueHub logo" className="h-32 object-contain" />
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center shadow-sm">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-              <span className="font-bold text-slate-800 text-xl tracking-tight">IssueHub</span>
-            </div>
+            
           </div>
 
           {/* Tab toggle */}
@@ -98,7 +91,7 @@ const Login = () => {
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
                 isLogin
-                  ? "bg-white text-violet-600 shadow-sm border border-slate-200"
+                  ? "bg-white text-sky-600 shadow-sm border border-slate-200"
                   : "text-slate-500 hover:text-slate-700"
               }`}
             >
@@ -108,7 +101,7 @@ const Login = () => {
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
                 !isLogin
-                  ? "bg-white text-violet-600 shadow-sm border border-slate-200"
+                  ? "bg-white text-sky-600 shadow-sm border border-slate-200"
                   : "text-slate-500 hover:text-slate-700"
               }`}
             >
