@@ -2,8 +2,9 @@
 
 > A modern, full-stack issue tracking board built with the MERN stack and TypeScript.
 
-![IssueHub Banner](./src/assets/issuehub.png)
+## 🔍 Browse and Try
 
+https://issuehub.chatd.dev/
 ---
 
 ## ✨ Features
@@ -54,7 +55,7 @@ issuehub/
 │   │   └── types/
 │   │       └── issue.ts          # Shared TypeScript types
 │
-└── server/                       # Express backend
+└── server/src/                       # Express backend
     ├── controllers/
     ├── models/
     ├── routes/
@@ -70,12 +71,12 @@ issuehub/
 
 - Node.js v18+
 - MongoDB (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
-- npm or yarn
+- npm 
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/issuehub.git
+git clone https://github.com/chathuradissanayake/IssueHub-the-Issue-tracker.git
 cd issuehub
 ```
 
@@ -108,7 +109,7 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`.
+The app will be available at `https://issuehub.chatd.dev/`.
 
 ---
 
@@ -214,7 +215,7 @@ Contributions are welcome! Please follow these steps:
 
 ## 📄 License
 
-This project is licensed under the [MIT License](./LICENSE).
+This project is licensed under the [License](./https://github.com/chathuradissanayake).
 
 ---
 
