@@ -22,7 +22,7 @@ const Login = () => {
 
       localStorage.setItem("token", data.token);
 
-      navigate("/issues");
+      navigate("/issueboard");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed";
       alert(message);

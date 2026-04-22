@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/User";
 import { generateToken } from "../utils/jwt";
 
-// ✅ REGISTER
+// REGISTER
 export const register = async (req: Request, res: Response) => {
   try {
     const { email, password, picture } = req.body;
@@ -23,10 +23,10 @@ export const register = async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       picture,
-      role: "user", // 🔒 force default (security)
+      role: "user", 
     });
 
-    // ✅ generate token with payload
+    // generate token with payload
     const token = generateToken({
       userId: user._id.toString(),
       role: user.role,
@@ -47,7 +47,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ LOGIN
+// LOGIN
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;

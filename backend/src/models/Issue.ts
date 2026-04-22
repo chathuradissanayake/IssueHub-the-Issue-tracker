@@ -1,11 +1,12 @@
-// models/Issue.ts
-import mongoose, { Document, Schema } from "mongoose";
+// src/models/Issue.ts
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IIssue extends Document {
   title: string;
   description: string;
   status: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
   priority: "LOW" | "MEDIUM" | "HIGH";
+  severity?: "MINOR" | "MAJOR" | "CRITICAL";
   user: mongoose.Types.ObjectId;
 }
 
@@ -22,6 +23,10 @@ const issueSchema = new Schema<IIssue>(
       type: String,
       enum: ["LOW", "MEDIUM", "HIGH"],
       default: "MEDIUM",
+    },
+    severity: {
+      type: String,
+      enum: ["MINOR", "MAJOR", "CRITICAL"],
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
