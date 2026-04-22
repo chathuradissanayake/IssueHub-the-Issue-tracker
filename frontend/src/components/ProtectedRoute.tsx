@@ -1,4 +1,3 @@
-// src/components/ProtectedRoute.tsx
 import { Navigate } from "react-router-dom";
 import type { ReactElement } from "react";
 import { isTokenExpired } from "../utils/auth";

@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { Issue, Status, Priority, Severity } from "../types/issue";
 import IssueTile from "./IssueTile";
 import IssueModal, { type IssueModalRef } from "./IssueModal";
+import Pagination from "./common/Pagination"; // Import the Pagination component
 import { createIssue, updateIssue } from "../services/issueService";
 
 interface IssuesListProps {
@@ -16,19 +17,28 @@ interface NewIssueTileProps {
 const NewIssueTile = ({ empty, onClick }: NewIssueTileProps) => (
   <div
     onClick={onClick}
-    className={`group cursor-pointer rounded-2xl border-2 border-dashed border-violet-200 bg-violet-50/50 hover:bg-violet-50 hover:border-violet-300 transition-all duration-200 flex flex-col items-center justify-center gap-2 ${empty ? "min-h-[220px]" : "h-[168px]"}`}
+    className={`group cursor-pointer rounded-2xl border-2 border-dashed border-sky-200 bg-sky-50/50 hover:bg-sky-50 hover:border-sky-300 transition-all duration-200 flex flex-col items-center justify-center gap-2 ${empty ? "min-h-[220px]" : "h-[168px]"}`}
   >
-    <div className="w-10 h-10 rounded-xl bg-white border border-violet-200 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
-      <svg className="w-5 h-5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className="w-10 h-10 rounded-xl bg-white border border-sky-200 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
+      <svg className="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
       </svg>
     </div>
-    <p className="text-violet-500 font-semibold text-sm">New Issue</p>
+    <p className="text-sky-500 font-semibold text-sm">New Issue</p>
   </div>
 );
 
 const IssuesList = ({ issues }: IssuesListProps) => {
   const modalRef = useRef<IssueModalRef>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const issuesPerPage = 19;
+
+  // Calculate the current issues to display
+  const indexOfLastIssue = currentPage * issuesPerPage;
+  const indexOfFirstIssue = indexOfLastIssue - issuesPerPage;
+  const currentIssues = issues.slice(indexOfFirstIssue, indexOfLastIssue);
 
   const handleTileClick = (issue: Issue) => {
     modalRef.current?.open(issue);
@@ -91,7 +101,7 @@ const IssuesList = ({ issues }: IssuesListProps) => {
     <>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         <NewIssueTile onClick={handleNewIssue} />
-        {issues.map((issue) => (
+        {currentIssues.map((issue) => (
           <div
             key={issue._id}
             onClick={() => handleTileClick(issue)}
@@ -101,6 +111,14 @@ const IssuesList = ({ issues }: IssuesListProps) => {
           </div>
         ))}
       </div>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(issues.length / issuesPerPage)}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
+
       <IssueModal ref={modalRef} onSubmit={handleCreateIssue} onUpdate={handleUpdateIssue} />
     </>
   );

@@ -1,4 +1,3 @@
-// src/pages/Login.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../services/authService";
@@ -6,6 +5,7 @@ import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import loginImage from "../assets/login_image.jpg";
 import issuehub from "../assets/issuehub.png";
+import { Circle, Loader2, CheckCircle2, Package } from "lucide-react"; // Import lucide-react icons
 
 const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,7 +42,6 @@ const Login = () => {
 
   return (
     <div className="flex h-screen bg-slate-50" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-
       {/* Left — image panel */}
       <div className="hidden md:flex md:w-1/2 relative overflow-hidden bg-slate-100">
         <img
@@ -50,7 +49,7 @@ const Login = () => {
           alt="IssueHub visual"
           className="object-cover w-full h-full select-none"
         />
-    
+
         <div className="absolute bottom-10 left-10 right-10">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
             <p className="text-white font-semibold text-lg mb-1">Track every issue.</p>
@@ -58,13 +57,16 @@ const Login = () => {
             {/* Mini stat pills */}
             <div className="flex gap-2 mt-4">
               {[
-                { icon: "🔥", label: "Open" },
-                { icon: "⚡", label: "In Progress" },
-                { icon: "✅", label: "Resolved" },
-                { icon: "📦", label: "Closed" },
-              ].map((s) => (
-                <span key={s.label} className="flex items-center gap-1 bg-white/15 text-white text-xs font-medium px-2.5 py-1 rounded-full">
-                  {s.icon} {s.label}
+                { icon: Circle, label: "Open", color: "text-blue-400" },
+                { icon: Loader2, label: "In Progress", color: "text-amber-400" },
+                { icon: CheckCircle2, label: "Resolved", color: "text-emerald-400" },
+                { icon: Package, label: "Closed", color: "text-slate-400" },
+              ].map(({ icon: Icon, label, color }) => (
+                <span
+                  key={label}
+                  className="flex items-center gap-1 bg-white/15 text-white text-xs font-medium px-2.5 py-1 rounded-full"
+                >
+                  <Icon className={`w-4 h-4 ${color}`} /> {label}
                 </span>
               ))}
             </div>
@@ -73,15 +75,13 @@ const Login = () => {
       </div>
 
       {/* Right — auth panel */}
-      <div className="w-full md:w-1/2 flex flex-col items-center  px-6 py-10">
+      <div className="w-full md:w-1/2 flex flex-col items-center px-6 py-10">
         <div className="w-full max-w-sm">
-
           {/* Logo + wordmark */}
           <div className="flex flex-col items-center my-4">
             <div className="">
               <img src={issuehub} alt="IssueHub logo" className="h-32 object-contain" />
             </div>
-            
           </div>
 
           {/* Tab toggle */}
@@ -121,7 +121,6 @@ const Login = () => {
           <p className="text-center text-xs text-slate-400 mt-6">
             By continuing, you agree to IssueHub's terms of service.
           </p>
-
         </div>
       </div>
     </div>

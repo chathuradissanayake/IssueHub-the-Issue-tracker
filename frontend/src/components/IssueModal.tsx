@@ -1,6 +1,6 @@
-// src/components/IssueModal.tsx
 import React, { forwardRef, useImperativeHandle, useState, useCallback } from "react";
 import type { Issue, Status, Priority, Severity } from "../types/issue";
+import StatusUpdateConfirmationModal from "./modals/StatusUpdateConfirmationModal";
 
 export interface IssueModalRef {
   open: (issue?: Issue) => void;
@@ -60,6 +60,7 @@ const IssueModal = forwardRef<IssueModalRef, IssueModalProps>(({ width, onSubmit
     priority: "MEDIUM" as Priority,
     severity: "" as Severity | "",
   });
+  const [pendingStatusChange, setPendingStatusChange] = useState<Status | null>(null);
 
   useImperativeHandle(ref, () => ({
     open: (issue?: Issue) => {
@@ -106,29 +107,42 @@ const IssueModal = forwardRef<IssueModalRef, IssueModalProps>(({ width, onSubmit
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.title.trim() || !form.description.trim()) {
-      alert("Fill all fields");
-      return;
+  e.preventDefault();
+
+  if (!form.title.trim() || !form.description.trim()) {
+    alert("Fill all fields");
+    return;
+  }
+
+  // 🔥 STATUS CHANGE DETECTION
+  if (issue && form.status !== issue.status) {
+    setPendingStatusChange(form.status);
+    return;
+  }
+
+  await saveIssue();
+};
+
+const saveIssue = async () => {
+  setSubmitting(true);
+  try {
+    if (!issue) {
+      await onSubmit?.(form);
+    } else {
+      await onUpdate?.(issue._id, form);
     }
-    setSubmitting(true);
-    try {
-      if (!issue) {
-        await onSubmit?.(form);
-      } else {
-        await onUpdate?.(issue._id, form);
-      }
-    } finally {
-      setSubmitting(false);
-    }
-    setIsVisible(false);
-    setIssue(null);
-  };
+  } finally {
+    setSubmitting(false);
+  }
+
+  setIsVisible(false);
+  setIssue(null);
+};
 
   if (!isVisible) return null;
 
   const selectClass =
-    "w-full h-9 px-3 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition appearance-none cursor-pointer";
+    "w-full h-9 px-3 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition appearance-none cursor-pointer";
 
   return (
     <div
@@ -140,18 +154,18 @@ const IssueModal = forwardRef<IssueModalRef, IssueModalProps>(({ width, onSubmit
         style={{ maxHeight: "90vh" }}
       >
         {/* Coloured top strip keyed to current status */}
-        <div className={`h-1 w-full ${statusMeta[form.status]?.dot ?? "bg-violet-400"} transition-colors duration-300`} />
+        <div className={`h-1 w-full ${statusMeta[form.status]?.dot ?? "bg-sky-400"} transition-colors duration-300`} />
 
         {/* Header */}
         <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-violet-50 border border-violet-100 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-sky-50 border border-sky-100 flex items-center justify-center">
               {!issue ? (
-                <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
               ) : (
-                <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
               )}
@@ -185,7 +199,7 @@ const IssueModal = forwardRef<IssueModalRef, IssueModalProps>(({ width, onSubmit
                 value={form.title}
                 onChange={handleChange}
                 placeholder="Short, descriptive issue title..."
-                className="w-full h-10 px-3 text-sm rounded-xl border border-slate-200 bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition font-medium"
+                className="w-full h-10 px-3 text-sm rounded-xl border border-slate-200 bg-white text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition font-medium"
               />
             </div>
 
@@ -199,7 +213,7 @@ const IssueModal = forwardRef<IssueModalRef, IssueModalProps>(({ width, onSubmit
                 value={form.description}
                 onChange={handleChange}
                 placeholder="Describe the issue in detail..."
-                className="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:border-violet-400 transition resize-none leading-relaxed"
+                className="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-white text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:border-sky-400 transition resize-none leading-relaxed"
                 rows={4}
               />
             </div>
@@ -308,7 +322,7 @@ const IssueModal = forwardRef<IssueModalRef, IssueModalProps>(({ width, onSubmit
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 h-10 rounded-xl bg-violet-500 hover:bg-violet-600 text-white text-sm font-semibold transition disabled:opacity-60 flex items-center justify-center gap-2 shadow-sm shadow-violet-200"
+                className="flex-1 h-10 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-sm font-semibold transition disabled:opacity-60 flex items-center justify-center gap-2 shadow-sm shadow-sky-200"
               >
                 {submitting ? (
                   <>
@@ -334,6 +348,18 @@ const IssueModal = forwardRef<IssueModalRef, IssueModalProps>(({ width, onSubmit
 
           </form>
         </div>
+      
+        <StatusUpdateConfirmationModal
+          isOpen={!!pendingStatusChange}
+          oldStatus={issue?.status as Status}
+          newStatus={pendingStatusChange as Status}
+          onCancel={() => setPendingStatusChange(null)}
+          onConfirm={async () => {
+            setPendingStatusChange(null);
+            await saveIssue();
+          }}
+        />
+
       </div>
     </div>
   );
