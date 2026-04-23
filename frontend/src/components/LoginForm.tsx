@@ -17,7 +17,7 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
   };
 
   const validatePassword = (password: string) => {
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
     return passwordRegex.test(password);
   };
 
