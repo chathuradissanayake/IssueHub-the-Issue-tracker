@@ -89,7 +89,7 @@ const IssuesList = ({ issues }: IssuesListProps) => {
         <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
           <NewIssueTile empty onClick={handleNewIssue} />
           <div className="col-span-full text-center py-10">
-            <p className="text-slate-400 text-base">No issues yet — create your first one!</p>
+            <p className="text-slate-400 text-base">No issues yet - Create your first one!</p>
           </div>
         </div>
         <IssueModal ref={modalRef} onSubmit={handleCreateIssue} onUpdate={handleUpdateIssue} />
