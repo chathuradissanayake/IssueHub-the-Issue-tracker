@@ -7,10 +7,11 @@ import authRoutes from "./routes/authRoutes";
 import issueRoutes from "./routes/issueRoutes";
 import cors from "cors";
 
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 const app = express();
 
 app.use(express.json());
-app.use(cors({ origin: ["http://localhost:5173", "https://issuehub.chatd.dev"], credentials: true }));
+app.use(cors({ origin: [CLIENT_URL], credentials: true }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/issues", issueRoutes);
