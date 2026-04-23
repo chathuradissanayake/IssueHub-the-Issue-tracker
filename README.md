@@ -4,7 +4,7 @@
 
 ## 🔍 Browse and Try
 
-https://issuehub.chatd.dev/
+https://issuehub.chatd.dev
 ---
 
 ## ✨ Features
