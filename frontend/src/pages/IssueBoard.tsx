@@ -167,14 +167,8 @@ const IssueBoard = () => {
               <p className="text-slate-400 text-sm">Fetching issues...</p>
             </div>
           )}
-
-          {!loading && issues.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-slate-500 font-medium">No issues found</p>
-            </div>
-          )}
-
-          {!loading && issues.length > 0 && <IssuesList issues={issues} />}
+          {!loading && issues.length >= 0 && <IssuesList issues={issues} />}
+          
         </div>
       </div>
 
