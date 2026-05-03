@@ -165,13 +165,27 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    const isMatch = await bcrypt.compare(password, user.password);
+
     // prevent unverified login
-    if (!user.isVerified) {
-      return res.status(403).json({message:"Please verify your email first",});
-    }
+    if (!user.isVerified && isMatch) {
+      
+      const otp = generateOtp();
+      user.otp = otp;
+
+      user.otpExpiry = new Date(Date.now() + 2 * 60 * 1000);
+
+      await user.save();
+      await sendOtpEmail(user.email, otp);
+      return res.status(403).json({
+        requiresOtp: true,
+        email: user.email,
+        message:
+          "Email not verified. OTP sent.",
+      });
+    }   
 
     // check password
-    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
