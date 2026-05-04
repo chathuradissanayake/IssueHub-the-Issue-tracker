@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../services/authService";
 import LoginForm from "../components/LoginForm";
@@ -18,16 +19,28 @@ const Login = () => {
   const handleLogin = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const { data } = await loginUser({ email, password });
+      const { data } = await loginUser({email, password});
+
+      // normal login success
       localStorage.setItem("token", data.token);
       navigate("/issueboard");
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Login failed";
+
+    } catch (error: unknown) {
+
+      // OTP REQUIRED
+      if (error instanceof axios.AxiosError && error.response?.data?.requiresOtp) {
+        setRegisterEmail(email);
+        setShowOtpModal(true);
+        return;
+      }
+
+      const message = error instanceof axios.AxiosError ? error.response?.data?.message || "Login failed" : "Login failed";
       alert(message);
+
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const handleRegister = async (email: string, password: string) => {
     try {
@@ -35,8 +48,8 @@ const Login = () => {
       await registerUser({ email, password });
       setRegisterEmail(email);
       setShowOtpModal(true);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Registration failed";
+    } catch (error: unknown) {
+      const message = error instanceof axios.AxiosError ? error.response?.data?.message || "Registration failed" : "Registration failed";
       alert(message);
     } finally {
       setLoading(false);
