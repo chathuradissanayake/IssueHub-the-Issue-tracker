@@ -67,7 +67,7 @@ const RegisterForm = ({ onRegister, loading }: RegisterFormProps) => {
         <div className="relative">
           <input
             className={`${inputClass}`}
-            placeholder="you@example.com"
+            placeholder="johnsmith@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

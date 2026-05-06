@@ -61,7 +61,7 @@ const LoginForm = ({ onLogin, loading }: LoginFormProps) => {
         <div className="relative">
           <input
             className={`${inputClass}`}
-            placeholder="you@example.com"
+            placeholder="johnsmith@gmail.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
