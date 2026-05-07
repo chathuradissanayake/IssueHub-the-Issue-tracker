@@ -5,11 +5,15 @@ import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import loginImage from "../assets/login_image.jpg";
 import issuehub from "../assets/issuehub.png";
-import { Circle, Loader2, CheckCircle2, Package } from "lucide-react"; // Import lucide-react icons
+import { Circle, Loader2, CheckCircle2, Package } from "lucide-react"; 
+import RegisterOtpModal from "../components/modals/RegisterOtpModal";
+
 
 const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (email: string, password: string) => {
@@ -30,8 +34,10 @@ const Login = () => {
     try {
       setLoading(true);
       await registerUser({ email, password });
-      alert("Registration successful! Please log in.");
-      setIsLogin(true);
+      setRegisteredEmail(email);
+      setShowOtpModal(true);
+      //alert("Registration successful! Please log in.");
+      //setIsLogin(true);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Registration failed";
       alert(message);
@@ -123,6 +129,17 @@ const Login = () => {
           </p>
         </div>
       </div>
+       {/* 🔥 OTP MODAL */}
+      {showOtpModal && (
+        <RegisterOtpModal
+          email={registeredEmail}
+          onClose={() => setShowOtpModal(false)}
+          onSuccess={() => {
+            setShowOtpModal(false);
+            setIsLogin(true); // switch to login after verification
+          }}
+        />
+      )}
     </div>
   );
 };
