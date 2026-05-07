@@ -21,12 +21,15 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    const message =
+      error.response?.data?.message || "Something went wrong";
+
+    if (error.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/"; 
+      window.location.href = "/";
     }
-    return Promise.reject(error);
+
+    return Promise.reject(new Error(message));
   }
 );
-
 export default api;
