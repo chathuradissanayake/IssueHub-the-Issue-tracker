@@ -1,6 +1,8 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { Loader2, ShieldCheck } from "lucide-react";
-import {verifyOtp, resendOtp} from "../../services/authService";
+import { X, Loader2, ShieldCheck } from "lucide-react";
+import { verifyOtp, resendOtp} from "../../services/authService";
+
 
 type Props = {email: string; onClose: () => void; onSuccess: (token: string) => void;};
 
@@ -79,9 +81,16 @@ const RegisterOtpModal = ({email, onClose, onSuccess}: Props) => {
       const otpCode = otp.join("");
       const { data } = await verifyOtp({ email,  otp: otpCode, });
       onSuccess(data.token);
-    } catch (error: any) {
-      setError(error.response?.data?.message ||  "OTP verification failed");
-    } finally {
+    } catch (error: unknown) {
+  if (axios.isAxiosError(error)) {
+    setError(
+      error.response?.data?.message ||
+      "OTP verification failed"
+    );
+  } else {
+    setError("OTP verification failed");
+  }
+  } finally {
       setLoading(false);
     }
   };
@@ -96,8 +105,14 @@ const RegisterOtpModal = ({email, onClose, onSuccess}: Props) => {
       setOtp(["", "", "", "", "", "",]);
       inputRefs.current[0]?.focus();
 
-    } catch (error: any) {
-      setError(error.response?.data?.message ||  "Failed to resend OTP");
+    } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+        setError(
+        error.response?.data?.message || "Failed to resend OTP"
+        );
+    } else {
+        setError("Failed to resend OTP");
+    }
     } finally {
       setResending(false);
     }
@@ -105,23 +120,17 @@ const RegisterOtpModal = ({email, onClose, onSuccess}: Props) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 p-8 animate-in fade-in zoom-in duration-200">
+      <div className="relative w-full max-w-md bg-white rounded-xl shadow-2xl border border-slate-100 p-8 animate-in fade-in zoom-in duration-200">
 
-        {/* CLOSE */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors"
-        >
-          ✕
+          className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition-colors">
+          <X className="w-5 h-5" />
         </button>
-
-        {/* ICON */}
         <div className="w-16 h-16 mx-auto rounded-2xl bg-sky-100 flex items-center justify-center mb-5">
           <ShieldCheck className="w-8 h-8 text-sky-600" />
         </div>
-
-        {/* TITLE */}
-        <h2 className="text-2xl font-bold text-center text-slate-800">
+        <h2 className="text-xl text-center text-slate-700">
           Verify Your Email
         </h2>
 
@@ -129,7 +138,7 @@ const RegisterOtpModal = ({email, onClose, onSuccess}: Props) => {
           Enter the 6-digit code sent to
         </p>
 
-        <p className="text-center font-semibold text-slate-700 mt-1 break-all">
+        <p className="text-center  text-sky-700 mt-1 break-all">
           {email}
         </p>
 
@@ -170,12 +179,8 @@ const RegisterOtpModal = ({email, onClose, onSuccess}: Props) => {
         {/* VERIFY BUTTON */}
         <button
           onClick={handleVerifyOtp}
-          disabled={
-            loading ||
-            otp.join("").length !== 6
-          }
-          className="w-full mt-8 bg-sky-600 hover:bg-sky-700 disabled:bg-slate-300 text-white py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
-        >
+          disabled={loading || otp.join("").length !== 6}
+          className="w-full mt-8 bg-sky-600 hover:bg-sky-700 disabled:bg-slate-300 text-white py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
           {loading ? (
             <>
               <Loader2 className="w-5 h-5 animate-spin" />
