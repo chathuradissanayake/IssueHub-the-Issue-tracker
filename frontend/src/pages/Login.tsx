@@ -4,12 +4,15 @@ import { loginUser, registerUser } from "../services/authService";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
 import loginImage from "../assets/login_image.jpg";
+import RegisterOtpModal from "../components/modals/RegisterOtpModal";
 import issuehub from "../assets/issuehub.png";
 import { Circle, Loader2, CheckCircle2, Package } from "lucide-react"; // Import lucide-react icons
 
 const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [showOtpModal, setShowOtpModal] = useState<boolean>(false);
+  const [registerEmail, setRegisterEmail] = useState<string>("");
   const navigate = useNavigate();
 
   const handleLogin = async (email: string, password: string) => {
@@ -30,8 +33,8 @@ const Login = () => {
     try {
       setLoading(true);
       await registerUser({ email, password });
-      alert("Registration successful! Please log in.");
-      setIsLogin(true);
+      setRegisterEmail(email);
+      setShowOtpModal(true);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Registration failed";
       alert(message);
@@ -39,6 +42,13 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  // OTP VERIFIED SUCCESS
+  const handleOtpSuccess = (token: string) => {
+    localStorage.setItem("token", token);
+    navigate("/issueboard");
+  };
+
 
   return (
     <div className="flex h-screen bg-slate-50" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -123,6 +133,14 @@ const Login = () => {
           </p>
         </div>
       </div>
+      {/* OTP MODAL */}
+      {showOtpModal && (
+        <RegisterOtpModal
+          email={registerEmail}
+          onClose={() => setShowOtpModal(false)}
+          onSuccess={handleOtpSuccess}
+        />
+      )}
     </div>
   );
 };
